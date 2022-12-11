@@ -92,6 +92,9 @@ function onConfirm() {
       padding: 0 24px;
       background: #fff;
       flex: 1;
+      .nut-checkbox__icon {
+        color: rgb(183, 165, 104);
+      }
       .data-empty {
         justify-content: center;
         height: 100%;

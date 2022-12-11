@@ -64,6 +64,9 @@ function onSearch(val) {
     height: 100%;
     .areas-checkbox-group {
       margin: 0 24px;
+      .nut-checkbox__icon {
+        color: rgb(183, 165, 104);
+      }
       .areas-checkbox {
         display: flex;
         .areas-checkbox-item-text {

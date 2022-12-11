@@ -107,7 +107,11 @@
             <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.idCardNumber" placeholder="请输入身份证号" type="text"/>
           </nut-form-item>
           <nut-form-item label="车牌号" :prop="'visitors.' + index + '.plateNumber'" >
-            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.plateNumber" :placeholder="getPlaceholder('请输入车牌号')" type="text"/>
+<!--            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.plateNumber" :placeholder="getPlaceholder('请输入车牌号')" type="text"/>-->
+            <view class="tap-cell" @click="() => canEdit && plateNumberPick.onShow(index)">
+              {{ dynamicForm.state.visitors[index].plateNumber || '请选择' }}
+              <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
+            </view>
           </nut-form-item>
           <nut-form-item :label-width="'calc(100vw - 143px)'">
             <template v-slot:label>
@@ -152,6 +156,12 @@
           <nut-icon font-class-name="iconfont" class-prefix="icon" name="add" />
           添加随行人员
         </nut-cell>
+        <plate-number-pick
+            :visible="plateNumberPick.show"
+            :confirm="plateNumberPick.confirm"
+            :close="plateNumberPick.onShow"
+            :values="dynamicForm.state.visitors[plateNumberPick.index].plateNumber"
+        />
       </nut-form>
       <view v-if="canEdit" class='confirm-btn'>
         <nut-button block shape="square" color="rgb(183,165,104)" @click="dynamicForm.methods.submit()">提交</nut-button>
@@ -166,6 +176,7 @@ import AreasPick from "./areas-pick.vue";
 import ReasonPick from "./reason-pick.vue";
 import SearchPick from "./search-pick.vue";
 import Taro from "@tarojs/taro";
+import PlateNumberPick from "./plate-number-pick.vue";
 
 const $instance = Taro.getCurrentInstance();
 const canEdit = ref(true);
@@ -374,6 +385,19 @@ const visitWhoPicker = reactive({
   },
 })
 
+const plateNumberPick = reactive({
+  show: false,
+  index: 0,
+  onShow(index) {
+    if (!isNaN(index)) plateNumberPick.index = index;
+    plateNumberPick.show = !plateNumberPick.show;
+  },
+  confirm(val) {
+    plateNumberPick.show = false;
+    dynamicForm.state.visitors[plateNumberPick.index].plateNumber = val;
+  },
+})
+
 </script>
 
 <style lang="scss">
@@ -388,7 +412,10 @@ const visitWhoPicker = reactive({
   }
   .form-container {
     background: #fff;
-
+    .nut-cell-group__warp {
+      border-radius: 0;
+      margin-top: 0;
+    }
     .nut-form-item {
       position: relative;
 
