@@ -10,7 +10,7 @@ import {
   CellGroup,
   Popup,
   OverLay,
-  Picker, Checkbox, CheckboxGroup, DatePicker, RadioGroup, Radio, Switch, Input, TextArea
+  Picker, Checkbox, CheckboxGroup, DatePicker, RadioGroup, Radio, Switch, Input, TextArea, Uploader, Progress
 } from '@nutui/nutui-taro'
 import {App} from 'vue'
 
@@ -32,5 +32,7 @@ const setNutUi = (app: App) => {
   app.use(Switch);
   app.use(Input);
   app.use(TextArea);
+  app.use(Uploader);
+  app.use(Progress);
 }
 export default setNutUi;

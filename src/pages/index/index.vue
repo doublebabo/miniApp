@@ -36,7 +36,9 @@ function toDetail(item) {
 }
 
 function toApply() {
-
+  Taro.navigateTo({
+    url: `/pages/apply_detail/index`,
+  });
 }
 
 </script>
@@ -48,7 +50,7 @@ function toApply() {
   height: 100vh;
   background: rgb(241,241,241);
   .scroll-box {
-    height: calc(100vh - 116px);
+    height: calc(100vh - 126px);
   }
   .searchbarWrap {
     .nut-searchbar__search-input {
@@ -69,8 +71,12 @@ function toApply() {
     position: fixed;
     bottom: 0;
     width: 100vw;
-    padding: 10px 30px;
+    padding: 10px 24px 20px 24px;
     box-sizing: border-box;
+    background: rgb(241,241,241);
+    button {
+      border-radius: 7px;
+    }
   }
 }
 </style>

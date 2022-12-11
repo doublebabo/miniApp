@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url('iconfont.ttf?t=1670653865863') format('truetype');
+  src: url('iconfont.ttf?t=1670737509319') format('truetype');
 }
 
 .iconfont {
@@ -17,6 +17,14 @@
 
 .icon-search:before {
   content: "\e741";
+}
+
+.icon-add:before {
+  content: "\e742";
+}
+
+.icon-minus:before {
+  content: "\e670";
 }
 
 .icon-clock:before {

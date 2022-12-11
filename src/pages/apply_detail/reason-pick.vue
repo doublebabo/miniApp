@@ -1,6 +1,6 @@
 <template>
   <view class="reason-pick">
-    <nut-popup position="bottom" @click-overlay="onClose" round
+    <nut-popup position="bottom" @click-overlay="onClose"
                :style="{ height: '60%' }" v-model:visible="props.visible">
       <template v-slot>
         <view class="container">
@@ -49,7 +49,7 @@ function onConfirm(i) {
       font-weight: bold;
       font-size: 16px;
       text-align: center;
-      padding: 21px 0;
+      padding: 16px 0;
       border-bottom: 1px solid rgb(247,247,247);
       position: sticky;
       top: 0;
@@ -61,8 +61,9 @@ function onConfirm(i) {
         position: absolute;
         right: 30px;
         top: 50%;
+        color: rgb(200,201,204);
         transform: translateY(-50%);
-        font-size: 12px;
+        font-size: 10px;
       }
     }
     .line-item {

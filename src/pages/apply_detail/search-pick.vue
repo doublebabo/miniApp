@@ -1,6 +1,6 @@
 <template>
   <view class="search-picker">
-    <nut-popup position="bottom" @click-overlay="onClose" round
+    <nut-popup position="bottom" @click-overlay="onClose"
                :style="{ height: '60%' }" v-model:visible="props.visible">
       <template v-slot>
         <view class="container">
