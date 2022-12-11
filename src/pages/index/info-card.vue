@@ -42,6 +42,7 @@ console.log(props.foo)
     display: flex;
     align-items: center;
     gap: 4px;
+    font-size: 14px;
     .text-line-icon {
       flex-shrink: 0;
       align-self: flex-start;
@@ -49,10 +50,11 @@ console.log(props.foo)
   }
   .top-title {
     display: flex;
+    font-size: 14px;
     justify-content: space-between;
     .top-title-lf {
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 16px;
     }
   }
   .interviewee {

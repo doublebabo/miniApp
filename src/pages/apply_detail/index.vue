@@ -42,6 +42,7 @@
             </view>
           </view>
           <nut-datepicker
+              class="data-select-picker"
               v-model="currentDateValue"
               :title="visitDatePick.title[visitDatePick.currenDateIndex]"
               type="date"
@@ -69,11 +70,13 @@
           />
         </nut-form-item>
         <nut-form-item body-align="right" label="需要就餐" prop="needEating">
-          <nut-switch :disable="!canEdit" active-text="是" inactive-text="否" active-color="rgb(57,181,74)"
+          <nut-switch class="switch-pick-btn" :disable="!canEdit" active-text="是" inactive-text="否"
+                      active-color="rgb(57,181,74)"
                       v-model="dynamicForm.state.needEating"/>
         </nut-form-item>
         <nut-form-item body-align="right" label="开通网络权限" prop="wifiAccess">
-          <nut-switch :disable="!canEdit" active-text="是" inactive-text="否" active-color="rgb(57,181,74)"
+          <nut-switch class="switch-pick-btn" :disable="!canEdit" active-text="是" inactive-text="否"
+                      active-color="rgb(57,181,74)"
                       v-model="dynamicForm.state.wifiAccess"/>
         </nut-form-item>
         <nut-form-item class="textarea-remark-box" label="备注" prop="remark">
@@ -88,26 +91,34 @@
           />
         </nut-form-item>
         <template v-for="(i, index) in dynamicForm.state.visitors" :key="i.key">
-          <view class="form-title">{{index === 0 ? '来访人信息' : ('随行人' + index)}}
-            <view v-if="canEdit && index !== 0" class="form-title-box-rt" @click="() => dynamicForm.methods.remove(index)">
-              <nut-icon font-class-name="iconfont" class-prefix="icon" name="minus" />
+          <view class="form-title">{{ index === 0 ? '来访人信息' : ('随行人' + index) }}
+            <view v-if="canEdit && index !== 0" class="form-title-box-rt"
+                  @click="() => dynamicForm.methods.remove(index)">
+              <nut-icon font-class-name="iconfont" class-prefix="icon" name="minus"/>
               移除访客
             </view>
           </view>
-          <nut-form-item label="手机号" :prop="'visitors.' + index + '.phoneNumber'" required :rules="[{ required: true, message: '请输入手机号' }]">
-            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.phoneNumber" placeholder="请输入手机号" type="text"/>
+          <nut-form-item label="手机号" :prop="'visitors.' + index + '.phoneNumber'" required
+                         :rules="[{ required: true, message: '请输入手机号' }]">
+            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.phoneNumber" placeholder="请输入手机号"
+                       type="text"/>
           </nut-form-item>
-          <nut-form-item label="姓名" :prop="'visitors.' + index + '.name'" required :rules="[{ required: true, message: '请输入姓名' }]">
+          <nut-form-item label="姓名" :prop="'visitors.' + index + '.name'" required
+                         :rules="[{ required: true, message: '请输入姓名' }]">
             <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.name" placeholder="请输入姓名" type="text"/>
           </nut-form-item>
-          <nut-form-item v-if="index === 0" label="工作单位" :prop="'visitors.' + index + '.company'" :required="index === 0" :rules="[{ required: true, message: '请输入工作单位' }]">
-            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.company" placeholder="请输入工作单位" type="text"/>
+          <nut-form-item v-if="index === 0" label="工作单位" :prop="'visitors.' + index + '.company'"
+                         :required="index === 0" :rules="[{ required: true, message: '请输入工作单位' }]">
+            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.company" placeholder="请输入工作单位"
+                       type="text"/>
           </nut-form-item>
-          <nut-form-item label="身份证号" :prop="'visitors.' + index + '.idCardNumber'" required :rules="[{ required: true, message: '请输入身份证号' }]">
-            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.idCardNumber" placeholder="请输入身份证号" type="text"/>
+          <nut-form-item label="身份证号" :prop="'visitors.' + index + '.idCardNumber'" required
+                         :rules="[{ required: true, message: '请输入身份证号' }]">
+            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.idCardNumber" placeholder="请输入身份证号"
+                       type="text"/>
           </nut-form-item>
-          <nut-form-item label="车牌号" :prop="'visitors.' + index + '.plateNumber'" >
-<!--            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.plateNumber" :placeholder="getPlaceholder('请输入车牌号')" type="text"/>-->
+          <nut-form-item label="车牌号" :prop="'visitors.' + index + '.plateNumber'">
+            <!--            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.plateNumber" :placeholder="getPlaceholder('请输入车牌号')" type="text"/>-->
             <view class="tap-cell" @click="() => canEdit && plateNumberPick.onShow(index)">
               {{ dynamicForm.state.visitors[index].plateNumber || '请选择' }}
               <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
@@ -120,7 +131,8 @@
                 <view class="label-subtitle">点击上传高清人脸正面照，用于人脸通行，请注意背景色不能为白色，不要过度使用美颜</view>
               </view>
             </template>
-            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*" v-model:file-list="i.personPicFile" maximum="1" multiple>
+            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*"
+                          v-model:file-list="i.personPicFile" maximum="1" multiple>
             </nut-uploader>
           </nut-form-item>
           <nut-form-item :label-width="'calc(100vw - 143px)'">
@@ -129,7 +141,8 @@
                 <view class="label-title">健康码</view>
               </view>
             </template>
-            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*" v-model:file-list="i.healthPicFile" maximum="1" multiple>
+            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*"
+                          v-model:file-list="i.healthPicFile" maximum="1" multiple>
             </nut-uploader>
           </nut-form-item>
           <nut-form-item :label-width="'calc(100vw - 143px)'">
@@ -138,7 +151,8 @@
                 <view class="label-title">行程码</view>
               </view>
             </template>
-            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*" v-model:file-list="i.travelPicFile" maximum="1" multiple>
+            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*"
+                          v-model:file-list="i.travelPicFile" maximum="1" multiple>
             </nut-uploader>
           </nut-form-item>
           <nut-form-item :label-width="'calc(100vw - 143px)'" label="核酸报告">
@@ -148,12 +162,13 @@
                 <view class="label-subtitle">请上传48小时内核酸检测阴性报告</view>
               </view>
             </template>
-            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*" v-model:file-list="i.nucleicAcidReportFile" maximum="1" multiple>
+            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*"
+                          v-model:file-list="i.nucleicAcidReportFile" maximum="1" multiple>
             </nut-uploader>
           </nut-form-item>
         </template>
         <nut-cell v-if="canEdit" class="add-cell" @click="dynamicForm.methods.add">
-          <nut-icon font-class-name="iconfont" class-prefix="icon" name="add" />
+          <nut-icon font-class-name="iconfont" class-prefix="icon" name="add"/>
           添加随行人员
         </nut-cell>
         <plate-number-pick
@@ -410,12 +425,15 @@ const plateNumberPick = reactive({
   .scroll-box {
     padding-bottom: 68px;
   }
+
   .form-container {
     background: #fff;
+
     .nut-cell-group__warp {
       border-radius: 0;
       margin-top: 0;
     }
+
     .nut-form-item {
       position: relative;
 
@@ -445,7 +463,7 @@ const plateNumberPick = reactive({
 
   .tap-cell {
     text-align: right;
-    color: rgb(102, 102, 102);
+    color: rgb(128, 128, 128);
     position: relative;
     padding-right: 20px;
 
@@ -468,28 +486,50 @@ const plateNumberPick = reactive({
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+
     .label-subtitle {
       color: rgb(122, 122, 122);
       font-size: 12px;
     }
   }
 
-  .nut-form-item__label  {
+  .nut-form-item__label {
     position: relative;
     color: #000;
+    font-size: 15px;
   }
 
   .nut-input-text {
     .input-text {
       text-align: right !important;
       width: 100%;
+      color: rgb(128, 128, 128);
+    }
+  }
+
+  .switch-pick-btn {
+    padding: 0 5px;
+  }
+  
+  .switch-pick-btn.nut-switch.switch-close {
+    background-color: #8799a3;
+  }
+
+  .data-select-picker {
+    .nut-picker__title {
+      font-weight: bold;
+    }
+
+    .nut-picker-roller-item-tarotile {
+      font-weight: bold;
+      font-size: 15px;
     }
   }
 
   .date-select-box {
     display: flex;
     float: right;
-    color: rgb(102, 102, 102);
+    color: rgb(128, 128, 128);
     padding-right: 20px;
 
     .date-select-box-text {
@@ -520,7 +560,7 @@ const plateNumberPick = reactive({
 
       textarea {
         width: 100%;
-        color: #000;
+        color: rgb(128, 128, 128);
         height: 50px;
       }
     }
@@ -534,6 +574,7 @@ const plateNumberPick = reactive({
     padding: 10px 24px 20px 24px;
     background: rgb(241, 241, 241);
     box-sizing: border-box;
+
     button {
       border-radius: 7px;
     }

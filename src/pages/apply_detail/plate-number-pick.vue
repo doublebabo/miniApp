@@ -27,10 +27,10 @@
             </view>
           </view>
           <view class="action-btn">
-            <nut-button class="action-btn-item" size="small" shape="square" @click="onClose">取消</nut-button>
+            <nut-button class="action-btn-item" size="normal" shape="square" @click="onClose">取消</nut-button>
             <view class="action-btn-lt">
-              <nut-button class="action-btn-item" size="small" shape="square" @click="plateNumberArray.onDelete">删除</nut-button>
-              <nut-button class="action-btn-item" color="rgb(183, 165, 104)" size="small" shape="square" @click="onConfirm">完成</nut-button>
+              <nut-button class="action-btn-item" size="normal" shape="square" @click="plateNumberArray.onDelete">删除</nut-button>
+              <nut-button class="action-btn-item" color="rgb(183, 165, 104)" size="normal" shape="square" @click="onConfirm">完成</nut-button>
             </view>
           </view>
         </view>
@@ -93,8 +93,10 @@ watch(props, () => {
     plateNumberArray.values = props.values.split('');
     if (props.values.length === 7) {
       carTypeValue.value = '1';
+      plateNumberArray.index = 6;
     } else {
       carTypeValue.value = '2';
+      plateNumberArray.index = 7;
     }
   }
 })
