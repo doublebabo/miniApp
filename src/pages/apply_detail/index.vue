@@ -334,8 +334,8 @@ const currentDateValue = computed(() => {
 });
 
 const visitDatePick = reactive({
-  show: false,
-  currenDateIndex: 0,
+  show: ref(false),
+  currenDateIndex: ref(0),
   minDate: new Date(),
   maxDate: new Date('2099-12-31'),
   title: ['请选择入园日期（年/月/日）', '请选择出园日期（年/月/日）'],
@@ -398,8 +398,8 @@ const visitWhoPicker = reactive({
 })
 
 const plateNumberPick = reactive({
-  show: false,
-  index: 0,
+  show: ref(false),
+  index: ref(0),
   onShow(index) {
     if (!isNaN(index)) plateNumberPick.index = index;
     plateNumberPick.show = !plateNumberPick.show;
