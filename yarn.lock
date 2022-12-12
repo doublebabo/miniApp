@@ -7927,6 +7927,11 @@ jsdom@^15.2.1:
     ws "^7.0.0"
     xml-name-validator "^3.0.0"
 
+jsencrypt@~3.2.1:
+  version "3.2.1"
+  resolved "http://npm.flashhold.com:4873/jsencrypt/-/jsencrypt-3.2.1.tgz#09766983cc760088ff26b12fe7e574252af97727"
+  integrity sha1-CXZpg8x2AIj/JrEv5+V0JSr5dyc=
+
 jsesc@2, jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.npmmirror.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"

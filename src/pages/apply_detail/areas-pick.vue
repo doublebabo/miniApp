@@ -1,10 +1,13 @@
 <template>
   <view class="areas-pick">
     <nut-popup position="bottom" @click-close-icon="onClose" @click-overlay="onClose"
-               :style="{ height: '80%' }" v-model:visible="props.visible">
+               :style="{ height: '80%' }" v-model:visible="visible">
       <template v-slot>
         <view class="container">
-          <view class="title">{{props.title || ''}}</view>
+          <view class="title">
+            {{props.title || ''}}
+            <nut-icon class="title-close-icon" name="close" @click="onClose"></nut-icon>
+          </view>
           <nut-checkboxgroup class="areas-checkbox-group" v-model="checkboxGroupsValue">
             <template v-for="(i, index) in props.options" :key="index">
               <nut-checkbox class="areas-checkbox" :label="String(i.value)">
@@ -30,12 +33,23 @@
 
 <script setup>
 import {ref} from "vue";
-const props = defineProps(['visible', 'options', 'confirm', 'close', 'title']);
+const props = defineProps(['options', 'confirm', 'title']);
 const checkboxGroupsValue = ref([]);
 
+const visible = ref(false);
+
 function onClose() {
-  props?.close();
+  visible.value = false;
 }
+
+function onShow() {
+  visible.value = true;
+}
+
+defineExpose({
+  onClose,
+  onShow
+})
 
 function onConfirm() {
   const result = [];
@@ -69,6 +83,14 @@ function onConfirm() {
       width: 100vw;
       background: #fff;
       z-index: 1;
+      .title-close-icon {
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        color: rgb(200,201,204);
+        transform: translateY(-50%);
+        font-size: 10px;
+      }
     }
 
     .confirm {

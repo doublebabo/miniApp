@@ -5,29 +5,27 @@
                  :scroll-top="0">
       <nut-form class="form-container" :model-value="dynamicForm.state" ref="dynamicRefForm">
         <view class="form-title">到访信息</view>
-        <nut-form-item label="来访事由" prop="visitReason.text" required :rules="[{ required: true, message: '请选择来访事由' }]">
+        <nut-form-item class="tap-cell-box" label="来访事由" prop="visitReason.text" required :rules="[{ required: true, message: '请选择来访事由' }]">
           <view class="tap-cell" @click="() => canEdit && visitReasonPicker.onShow()">
             {{ dynamicForm.state.visitReason.text || '请选择' }}
             <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
           </view>
           <reason-pick
-              :visible="visitReasonPicker.show"
+              ref="reasonPick"
               :options="visitReasonPicker.options"
               :confirm="visitReasonPicker.confirm"
-              :close="visitReasonPicker.onShow"
               :title="'请选择来访事由'"
           />
         </nut-form-item>
-        <nut-form-item label="来访园区" prop="visitArea.text" required :rules="[{ required: true, message: '请选择来访园区' }]">
+        <nut-form-item class="tap-cell-box" label="来访园区" prop="visitArea.text" required :rules="[{ required: true, message: '请选择来访园区' }]">
           <view class="tap-cell" @click="() => canEdit && visitAreaPicker.onShow()">
             {{ dynamicForm.state.visitArea.text || '请选择' }}
             <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
           </view>
           <areas-pick
-              :visible="visitAreaPicker.show"
+              ref="areasPick"
               :options="visitAreaPicker.options"
               :confirm="visitAreaPicker.confirm"
-              :close="visitAreaPicker.onShow"
               :title="'请选择来访园区'"
           />
         </nut-form-item>
@@ -56,16 +54,15 @@
             <nut-button class="date-select-btn" block shape="square" @click="visitDatePick.confirm">确定</nut-button>
           </nut-datepicker>
         </nut-form-item>
-        <nut-form-item label="被拜访人" prop="visitWho.text" required :rules="[{ required: true, message: '请选择被拜访人' }]">
+        <nut-form-item class="tap-cell-box" label="被拜访人" prop="visitWho.text" required :rules="[{ required: true, message: '请选择被拜访人' }]">
           <view class="tap-cell" @click="() => canEdit && visitWhoPicker.onShow()">
             {{ dynamicForm.state.visitWho.text || '请选择' }}
             <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
           </view>
           <search-pick
-              :visible="visitWhoPicker.show"
+              ref="searchPick"
               :request="visitWhoPicker.request"
               :confirm="visitWhoPicker.confirm"
-              :close="visitWhoPicker.onShow"
               :placeholder="'请输入被拜访人手机号/工号/姓名'"
           />
         </nut-form-item>
@@ -117,7 +114,7 @@
             <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.idCardNumber" placeholder="请输入身份证号"
                        type="text"/>
           </nut-form-item>
-          <nut-form-item label="车牌号" :prop="'visitors.' + index + '.plateNumber'">
+          <nut-form-item class="tap-cell-box" label="车牌号" :prop="'visitors.' + index + '.plateNumber'">
             <!--            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.plateNumber" :placeholder="getPlaceholder('请输入车牌号')" type="text"/>-->
             <view class="tap-cell" @click="() => canEdit && plateNumberPick.onShow(index)">
               {{ dynamicForm.state.visitors[index].plateNumber || '请选择' }}
@@ -195,6 +192,9 @@ import PlateNumberPick from "./plate-number-pick.vue";
 
 const $instance = Taro.getCurrentInstance();
 const canEdit = ref(true);
+const reasonPick = ref()
+const areasPick = ref()
+const searchPick = ref()
 
 onBeforeMount(() => {
   if ($instance.router?.params.id) {
@@ -284,7 +284,6 @@ const dynamicForm = {
 };
 
 const visitReasonPicker = reactive({
-  show: false,
   options: [
     {text: '商务交流', value: 1},
     {text: '商务交流2', value: 2},
@@ -299,10 +298,10 @@ const visitReasonPicker = reactive({
     {text: '商务交流4', value: 4},
   ],
   onShow() {
-    visitReasonPicker.show = !visitReasonPicker.show;
+    reasonPick.value.onShow();
   },
   confirm(selectedOption) {
-    visitReasonPicker.show = false;
+    reasonPick.value.onClose();
     dynamicForm.state.visitReason.value = selectedOption.value;
     dynamicForm.state.visitReason.text = selectedOption.text;
   },
@@ -310,7 +309,6 @@ const visitReasonPicker = reactive({
 
 
 const visitAreaPicker = reactive({
-  show: false,
   options: [
     {name: '名字名字名字名字名字名字字', value: 1, address: '地址地地址地址地址地址地址地址地址地址'},
     {name: '名字名字名字名字名字名字名字名字名字名字名字名字1', value: 2, address: '地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址1'},
@@ -321,10 +319,10 @@ const visitAreaPicker = reactive({
     {name: '名字名字名字名字名字名字名字名字名字名字名字名字6', value: 7, address: '地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址6'},
   ],
   onShow() {
-    visitAreaPicker.show = !visitAreaPicker.show;
+    areasPick.value.onShow();
   },
   confirm(selectedOptions) {
-    visitAreaPicker.show = false;
+    areasPick.value.onClose();
     dynamicForm.state.visitArea.value = selectedOptions?.map(o => o.value)?.join(',');
     dynamicForm.state.visitArea.text = selectedOptions?.map(o => o.name)?.join(',');
   },
@@ -375,7 +373,6 @@ const visitDatePick = reactive({
 });
 
 const visitWhoPicker = reactive({
-  show: false,
   request(params) {
     return Promise.resolve({
       data: [
@@ -391,10 +388,10 @@ const visitWhoPicker = reactive({
     })
   },
   onShow() {
-    visitWhoPicker.show = !visitWhoPicker.show;
+    searchPick.value.onShow();
   },
   confirm(selectedOptions) {
-    visitWhoPicker.show = false;
+    searchPick.value.onClose();
     dynamicForm.state.visitWho.value = selectedOptions.value;
     dynamicForm.state.visitWho.text = selectedOptions.text;
   },
@@ -461,19 +458,27 @@ const plateNumberPick = reactive({
     background: rgb(247, 247, 247);
   }
 
-  .tap-cell {
-    text-align: right;
-    color: rgb(128, 128, 128);
-    position: relative;
-    padding-right: 20px;
 
-    .tap-cell-icon {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      right: 0;
+  .tap-cell-box {
+    display: flex;
+    align-items: center;
+    padding: 0 16Px;
+    .tap-cell {
+      color: rgb(128, 128, 128);
+      position: relative;
+      padding: 13Px;
+      padding-right: 20px;
+      text-align: right;
+      .tap-cell-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0;
+      }
     }
   }
+
+
 
   .add-cell {
     display: flex;

@@ -1,7 +1,7 @@
 <template>
   <view class="reason-pick">
     <nut-popup position="bottom" @click-overlay="onClose"
-               :style="{ height: '60%' }" v-model:visible="props.visible">
+               :style="{ height: '60%' }" v-model:visible="visible">
       <template v-slot>
         <view class="container">
           <view class="title">
@@ -19,13 +19,27 @@
 </template>
 
 <script setup>
-const props = defineProps(['visible', 'options', 'confirm', 'close', 'title']);
+import {ref} from "vue";
+
+const props = defineProps(['options', 'confirm', 'title']);
+
+const visible = ref(false);
 
 function onClose() {
-  props?.close();
+  visible.value = false;
 }
 
+function onShow() {
+  visible.value = true;
+}
+
+defineExpose({
+  onClose,
+  onShow
+})
+
 function onConfirm(i) {
+  visible.value = false;
   props?.confirm?.(i);
 }
 </script>

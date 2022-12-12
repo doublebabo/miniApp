@@ -1,7 +1,7 @@
 <template>
   <view class="search-picker">
     <nut-popup position="bottom" @click-overlay="onClose"
-               :style="{ height: '60%' }" v-model:visible="props.visible">
+               :style="{ height: '60%' }" v-model:visible="visible">
       <template v-slot>
         <view class="container">
           <view class="title">
@@ -30,15 +30,26 @@
 <script setup>
 import {reactive, ref} from "vue";
 
-const props = defineProps(['visible', 'options', 'confirm', 'close', 'placeholder', 'request']);
+const props = defineProps(['options', 'confirm', 'placeholder', 'request']);
 const searchValue = ref('');
 const checkboxGroupsValue = ref([]);
 const state = reactive({
   options: props.options || [],
 })
+const visible = ref(false);
+
 function onClose() {
-  props?.close();
+  visible.value = false;
 }
+
+function onShow() {
+  visible.value = true;
+}
+
+defineExpose({
+  onClose,
+  onShow
+})
 
 function onConfirm(i) {
   checkboxGroupsValue.value = i;
