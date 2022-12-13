@@ -437,7 +437,7 @@ const plateNumberPick = reactive({
       .nut-form-item__body__tips {
         position: absolute;
         left: 18px;
-        top: 27px;
+        bottom: 0;
       }
     }
   }
