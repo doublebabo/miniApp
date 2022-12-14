@@ -1,20 +1,24 @@
 <template>
   <view class="apply-list">
+    <nut-searchbar class="searchbarWrap" v-model="searchValue" @search="onSearch" placeholder="请输入被拜访人/拜访事由/状态查询">
+      <template v-slot:leftin>
+        <nut-icon font-class-name="iconfont" class-prefix="icon" name="search"/>
+      </template>
+    </nut-searchbar>
     <scroll-view class="scroll-box"
                  :scroll-y="true"
+                 :refresherEnabled="true"
+                 :refresherBackground="'#f1f1f1'"
+                 :refresherTriggered="refreshTriggered"
+                 @refresherRefresh="onPulling"
                  :scroll-top="0">
-      <nut-searchbar class="searchbarWrap" v-model="searchValue" @search="onSearch" placeholder="请输入被拜访人/拜访事由/状态查询">
-        <template v-slot:leftin>
-          <nut-icon font-class-name="iconfont" class-prefix="icon" name="search"/>
-        </template>
-      </nut-searchbar>
       <template v-for="(item, index) in 100">
         <info-card  @click="toDetail(item)"/>
       </template>
-      <view class="bottom-btn">
-        <nut-button block type="primary" color="rgb(183,165,104)" @click="toApply">申请入园</nut-button>
-      </view>
     </scroll-view>
+    <view class="bottom-btn">
+      <nut-button block type="primary" color="rgb(183,165,104)" @click="toApply">申请入园</nut-button>
+    </view>
   </view>
 </template>
 
@@ -24,6 +28,8 @@ import InfoCard from "./info-card";
 import Taro from "@tarojs/taro";
 
 const searchValue = ref('');
+
+const refreshTriggered = ref(false)
 
 function onSearch(e) {
   searchValue.value = e;
@@ -39,6 +45,15 @@ function toApply() {
   Taro.navigateTo({
     url: `/pages/apply_detail/index`,
   });
+}
+
+function onPulling() {
+  console.log('pulling');
+  if (refreshTriggered.value) return;
+  refreshTriggered.value = true;
+  setTimeout(() => {
+    refreshTriggered.value = false;
+  }, 1000);
 }
 
 </script>
