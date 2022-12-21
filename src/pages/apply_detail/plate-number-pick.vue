@@ -27,10 +27,10 @@
             </view>
           </view>
           <view class="action-btn">
-            <nut-button class="action-btn-item" size="normal" shape="square" @click="onClose">取消</nut-button>
+            <button class="action-btn-item action-btn-item-cancel" size="mini" @click="onClose">取消</button>
             <view class="action-btn-lt">
-              <nut-button class="action-btn-item" size="normal" shape="square" @click="plateNumberArray.onDelete">删除</nut-button>
-              <nut-button class="action-btn-item" color="rgb(183, 165, 104)" size="normal" shape="square" @click="onConfirm">完成</nut-button>
+              <button class="action-btn-item action-btn-item-del" size="mini" @click="plateNumberArray.onDelete">删除</button>
+              <button class="action-btn-item action-btn-item-ok" size="mini" type="primary"  @click="onConfirm">完成</button>
             </view>
           </view>
         </view>
@@ -153,7 +153,7 @@ function onClose() {
   .car-type {
     .nut-radiogroup {
       display: flex;
-      gap: 8px;
+      gap: 12px;
       .nut-radio {
         margin: 0;
       }
@@ -161,7 +161,7 @@ function onClose() {
         margin-left: 2px;
       }
       .nut-radio__icon {
-        color: rgb(183, 165, 104);
+        color: #2196f3;
       }
     }
   }
@@ -181,8 +181,8 @@ function onClose() {
       flex: 1;
     }
     .box-item-active {
-      box-shadow: 0 0 6px rgb(183, 165, 104);
-      border-color: rgb(183, 165, 104);
+      box-shadow: 0 0 6px #2196f3;
+      border-color: #2196f3;
     }
     .box-item-point {
       width: 6px;
@@ -227,8 +227,11 @@ function onClose() {
     display: flex;
     justify-content: space-between;
     padding: 10px 12px 20px 12px;
-    .action-btn-item {
-      border-radius: 5px;
+    .action-btn-item-cancel {
+      margin: 0;
+    }
+    .action-btn-item-ok {
+      background-color: #2196f3;
     }
     .action-btn-lt {
       display: flex;

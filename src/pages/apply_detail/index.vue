@@ -91,7 +91,7 @@
           <view class="form-title">{{ index === 0 ? '来访人信息' : ('随行人' + index) }}
             <view v-if="canEdit && index !== 0" class="form-title-box-rt"
                   @click="() => dynamicForm.methods.remove(index)">
-              <nut-icon font-class-name="iconfont" class-prefix="icon" name="minus"/>
+              <nut-icon class="minus-icon" font-class-name="iconfont" class-prefix="icon" name="minus"/>
               移除访客
             </view>
           </view>
@@ -176,7 +176,7 @@
         />
       </nut-form>
       <view v-if="canEdit" class='confirm-btn'>
-        <nut-button block shape="square" color="rgb(183,165,104)" @click="dynamicForm.methods.submit()">提交</nut-button>
+        <button class="btn-max-w btn" type="primary" @click="dynamicForm.methods.submit()">提交</button>
       </view>
     </scroll-view>
   </view>
@@ -246,6 +246,9 @@ const dynamicForm = {
 
   methods: {
     submit() {
+      Taro.redirectTo({
+        url: `/pages/finish/index`,
+      })
       dynamicRefForm.value.validate().then(({valid, errors}) => {
         if (valid) {
           console.log('success', dynamicForm);
@@ -444,18 +447,22 @@ const plateNumberPick = reactive({
 
   .form-title-box-rt {
     float: right;
-    color: rgb(183, 165, 104);
+    color: #2196f3;
     margin-right: 16px;
-    font-weight: normal;
+    font-weight: bold;
     display: flex;
     justify-content: center;
+    .minus-icon {
+      position: relative;
+      top: 1px;
+    }
   }
 
   .form-title {
     padding: 8px 0 8px 20px;
     font-weight: bold;
-    border-left: 3px solid rgb(192, 163, 83);
-    background: rgb(247, 247, 247);
+    border-left: 5px solid #2196f3;
+    background: #e8f3fe;
   }
 
 
@@ -484,7 +491,8 @@ const plateNumberPick = reactive({
     display: flex;
     justify-content: center;
     font-size: 16px;
-    color: rgb(183, 165, 104);
+    color: #2196f3;
+    font-weight: bold;
   }
 
   .label-container {
@@ -543,7 +551,7 @@ const plateNumberPick = reactive({
   }
 
   .date-select-btn {
-    color: rgb(183, 165, 104);
+    color: #2196f3;
     border: none;
     border-top: 5px solid rgb(247, 247, 247);
     letter-spacing: 5px;
@@ -577,11 +585,11 @@ const plateNumberPick = reactive({
     bottom: 0;
     width: 100vw;
     padding: 10px 24px 20px 24px;
-    background: rgb(241, 241, 241);
+    background: #ffffff;
     box-sizing: border-box;
 
     button {
-      border-radius: 7px;
+      background-color: #2196f3;
     }
   }
 }

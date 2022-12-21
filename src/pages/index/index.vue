@@ -1,17 +1,21 @@
 <template>
   <view class="index">
-    <nut-button class="btn" size="large" block color="#1890FF" :loading="loading"  openType="getPhoneNumber" @getphonenumber="wxLogin">微信一键登录</nut-button>
+    <img :src="loginSvg">
+    <button class="btn-max-w btn" type="primary" @click="onEnter">申请入园</button>
   </view>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import Taro from "@tarojs/taro";
 
-const loading = ref(false)
+const loginSvg = require('./../../assets/login.svg');
 
-function wxLogin(e) {
-  console.log('wxLogin===========', e);
+function onEnter() {
+  Taro.redirectTo({
+    url: `/pages/apply_detail/index`,
+  });
 }
+
 
 </script>
 
@@ -19,10 +23,13 @@ function wxLogin(e) {
 .index {
   height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
+  padding-top: 15vh;
   .btn {
     width: 70%;
+    background-color: #2196f3;
   }
 }
 </style>

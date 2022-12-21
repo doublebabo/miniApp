@@ -1,7 +1,7 @@
 export default defineAppConfig({
   pages: [
-    // 'pages/index/index',
-    'pages/apply_list/index',
+    'pages/index/index',
+    'pages/finish/index',
     'pages/apply_detail/index',
   ],
   window: {
