@@ -7,11 +7,8 @@
         <view class="form-title">到访信息</view>
         <nut-form-item class="tap-cell-box" label="来访事由" prop="v_reason" required :rules="[{ required: true, message: '请输入来访事由' }]">
           <nut-input
-              class="textarea-remark"
               v-model="dynamicForm.state.v_reason"
-              type="textarea"
-              show-word-limit
-              max-length="50"
+              type="input"
               :placeholder="getPlaceholder('请输入来访事由')"
               :readonly="!canEdit"
           />
@@ -28,18 +25,16 @@
               :title="'请选择来访园区'"
           />
         </nut-form-item>
-        <nut-form-item label="来访时间" prop="visitArea.text" required :rules="[{ required: true, message: '请选择来访时间' }]">
-          <view class="date-select-box">
-            <view class="date-select-box-date" @click="() => canEdit && visitDatePick.onShow(0)">
-              {{ dynamicForm.state.visitDate[0] || '来访时间' }}
-            </view>
+        <nut-form-item class="tap-cell-box" label="来访时间" :prop="'visitDate.' + 0" required :rules="[{ required: true, message: '请选择来访时间' }]">
+          <view class="tap-cell" @click="() => canEdit && visitDatePick.onShow(0)">
+            {{ dynamicForm.state.visitDate?.[0] || '请选择来访时间' }}
+            <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
           </view>
         </nut-form-item>
-        <nut-form-item label="离访时间" prop="visitArea.text" required :rules="[{ required: true, message: '请选择离访时间' }]">
-          <view class="date-select-box">
-            <view class="date-select-box-date" @click="() => canEdit && visitDatePick.onShow(1)">
-              {{ dynamicForm.state.visitDate[1] || '离访时间' }}
-            </view>
+        <nut-form-item class="tap-cell-box" label="离访时间" :prop="'visitDate.' + 1" required :rules="[{ required: true, message: '请选择离访时间' }]">
+          <view class="tap-cell" @click="() => canEdit && visitDatePick.onShow(1)">
+            {{ dynamicForm.state.visitDate?.[1] || '请选择离访时间' }}
+            <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
           </view>
         </nut-form-item>
         <nut-form-item class="tap-cell-box" label="被拜访人" prop="visitWho.text" required :rules="[{ required: true, message: '请选择被拜访人' }]">
