@@ -5,16 +5,15 @@
                  :scroll-top="0">
       <nut-form class="form-container" :model-value="dynamicForm.state" ref="dynamicRefForm">
         <view class="form-title">到访信息</view>
-        <nut-form-item class="tap-cell-box" label="来访事由" prop="visitReason.text" required :rules="[{ required: true, message: '请选择来访事由' }]">
-          <view class="tap-cell" @click="() => canEdit && visitReasonPicker.onShow()">
-            {{ dynamicForm.state.visitReason.text || '请选择' }}
-            <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
-          </view>
-          <reason-pick
-              ref="reasonPick"
-              :options="visitReasonPicker.options"
-              :confirm="visitReasonPicker.confirm"
-              :title="'请选择来访事由'"
+        <nut-form-item class="tap-cell-box" label="来访事由" prop="v_reason" required :rules="[{ required: true, message: '请输入来访事由' }]">
+          <nut-input
+              class="textarea-remark"
+              v-model="dynamicForm.state.v_reason"
+              type="textarea"
+              show-word-limit
+              max-length="50"
+              :placeholder="getPlaceholder('请输入来访事由')"
+              :readonly="!canEdit"
           />
         </nut-form-item>
         <nut-form-item class="tap-cell-box" label="来访园区" prop="visitArea.text" required :rules="[{ required: true, message: '请选择来访园区' }]">
@@ -29,30 +28,19 @@
               :title="'请选择来访园区'"
           />
         </nut-form-item>
-        <nut-form-item label="来访日期" prop="visitArea.text" required :rules="[{ required: true, message: '请选择来访园区' }]">
+        <nut-form-item label="来访时间" prop="visitArea.text" required :rules="[{ required: true, message: '请选择来访时间' }]">
           <view class="date-select-box">
             <view class="date-select-box-date" @click="() => canEdit && visitDatePick.onShow(0)">
-              {{ dynamicForm.state.visitDate[0] || '入园日期' }}
-            </view>
-            <text class="date-select-box-text">至</text>
-            <view class="date-select-box-date" @click="() => canEdit && visitDatePick.onShow(1)">
-              {{ dynamicForm.state.visitDate[1] || '离园日期' }}
+              {{ dynamicForm.state.visitDate[0] || '来访时间' }}
             </view>
           </view>
-          <nut-datepicker
-              class="data-select-picker"
-              v-model="currentDateValue"
-              :title="visitDatePick.title[visitDatePick.currenDateIndex]"
-              type="date"
-              :min-date="visitDatePick.minDate"
-              :max-date="visitDatePick.maxDate"
-              @change="visitDatePick.change"
-              cancel-text=" "
-              ok-text=" "
-              v-model:visible="visitDatePick.show"
-          >
-            <nut-button class="date-select-btn" block shape="square" @click="visitDatePick.confirm">确定</nut-button>
-          </nut-datepicker>
+        </nut-form-item>
+        <nut-form-item label="离访时间" prop="visitArea.text" required :rules="[{ required: true, message: '请选择离访时间' }]">
+          <view class="date-select-box">
+            <view class="date-select-box-date" @click="() => canEdit && visitDatePick.onShow(1)">
+              {{ dynamicForm.state.visitDate[1] || '离访时间' }}
+            </view>
+          </view>
         </nut-form-item>
         <nut-form-item class="tap-cell-box" label="被拜访人" prop="visitWho.text" required :rules="[{ required: true, message: '请选择被拜访人' }]">
           <view class="tap-cell" @click="() => canEdit && visitWhoPicker.onShow()">
@@ -66,20 +54,10 @@
               :placeholder="'请输入被拜访人手机号/工号/姓名'"
           />
         </nut-form-item>
-        <nut-form-item body-align="right" label="需要就餐" prop="needEating">
-          <nut-switch class="switch-pick-btn" :disable="!canEdit" active-text="是" inactive-text="否"
-                      active-color="rgb(57,181,74)"
-                      v-model="dynamicForm.state.needEating"/>
-        </nut-form-item>
-        <nut-form-item body-align="right" label="开通网络权限" prop="wifiAccess">
-          <nut-switch class="switch-pick-btn" :disable="!canEdit" active-text="是" inactive-text="否"
-                      active-color="rgb(57,181,74)"
-                      v-model="dynamicForm.state.wifiAccess"/>
-        </nut-form-item>
-        <nut-form-item class="textarea-remark-box" label="备注" prop="remark">
+        <nut-form-item class="textarea-remark-box" label="备注" prop="memo">
           <nut-input
               class="textarea-remark"
-              v-model="dynamicForm.state.remark"
+              v-model="dynamicForm.state.memo"
               type="textarea"
               show-word-limit
               max-length="50"
@@ -132,37 +110,6 @@
                           v-model:file-list="i.personPicFile" maximum="1" multiple>
             </nut-uploader>
           </nut-form-item>
-          <nut-form-item :label-width="'calc(100vw - 143px)'">
-            <template v-slot:label>
-              <view class="label-container">
-                <view class="label-title">健康码</view>
-              </view>
-            </template>
-            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*"
-                          v-model:file-list="i.healthPicFile" maximum="1" multiple>
-            </nut-uploader>
-          </nut-form-item>
-          <nut-form-item :label-width="'calc(100vw - 143px)'">
-            <template v-slot:label>
-              <view class="label-container">
-                <view class="label-title">行程码</view>
-              </view>
-            </template>
-            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*"
-                          v-model:file-list="i.travelPicFile" maximum="1" multiple>
-            </nut-uploader>
-          </nut-form-item>
-          <nut-form-item :label-width="'calc(100vw - 143px)'" label="核酸报告">
-            <template v-slot:label>
-              <view class="label-container">
-                <view class="label-title">核酸报告</view>
-                <view class="label-subtitle">请上传48小时内核酸检测阴性报告</view>
-              </view>
-            </template>
-            <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*"
-                          v-model:file-list="i.nucleicAcidReportFile" maximum="1" multiple>
-            </nut-uploader>
-          </nut-form-item>
         </template>
         <nut-cell v-if="canEdit" class="add-cell" @click="dynamicForm.methods.add">
           <nut-icon font-class-name="iconfont" class-prefix="icon" name="add"/>
@@ -174,6 +121,20 @@
             :close="plateNumberPick.onShow"
             :values="dynamicForm.state.visitors[plateNumberPick.index].plateNumber"
         />
+        <nut-datepicker
+            class="data-select-picker"
+            v-model="currentDateValue"
+            :title="visitDatePick.title[visitDatePick.currenDateIndex]"
+            type="datetime"
+            :min-date="visitDatePick.minDate"
+            :max-date="visitDatePick.maxDate"
+            @change="visitDatePick.change"
+            cancel-text=" "
+            ok-text=" "
+            v-model:visible="visitDatePick.show"
+        >
+          <nut-button class="date-select-btn" block shape="square" @click="visitDatePick.confirm">确定</nut-button>
+        </nut-datepicker>
       </nut-form>
       <view v-if="canEdit" class='confirm-btn'>
         <button class="btn-max-w btn" type="primary" @click="dynamicForm.methods.submit()">提交</button>
@@ -210,10 +171,7 @@ const dynamicRefForm = ref<any>(null);
 const dynamicForm = {
   state: reactive({
     name: '',
-    visitReason: {
-      text: '',
-      value: ''
-    },
+    v_reason: '',
     visitArea: {
       text: '',
       value: ''
@@ -224,12 +182,8 @@ const dynamicForm = {
     },
     needEating: false,
     wifiAccess: false,
-    remark: '',
+    memo: '',
     visitDate: new Array(2),
-    tels: new Array({
-      key: 1,
-      value: ''
-    }),
     visitors: [{
       key: 1,
       phoneNumber: '',
@@ -285,30 +239,6 @@ const dynamicForm = {
     }
   }
 };
-
-const visitReasonPicker = reactive({
-  options: [
-    {text: '商务交流', value: 1},
-    {text: '商务交流2', value: 2},
-    {text: '商务交流3', value: 3},
-    {text: '商务交流4', value: 4},
-    {text: '商务交流4', value: 4},
-    {text: '商务交流4', value: 4},
-    {text: '商务交流4', value: 4},
-    {text: '商务交流4', value: 4},
-    {text: '商务交流4', value: 4},
-    {text: '商务交流4', value: 4},
-    {text: '商务交流4', value: 4},
-  ],
-  onShow() {
-    reasonPick.value.onShow();
-  },
-  confirm(selectedOption) {
-    reasonPick.value.onClose();
-    dynamicForm.state.visitReason.value = selectedOption.value;
-    dynamicForm.state.visitReason.text = selectedOption.text;
-  },
-})
 
 
 const visitAreaPicker = reactive({
