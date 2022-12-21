@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro';
 
 
-const baseUrl = '';
+const baseUrl = 'https://115.236.17.59:9021/';
 /**
  * 封封微信的的request
  */
@@ -16,32 +16,7 @@ function request(url, data = {}, method = "GET") {
         // 'X-Litemall-Token': Taro.getStorageSync('token')
       },
       success: function(res) {
-        if (res.statusCode == 200) {
-          if (res.data.errno == 501) {
-            // 清除登录相关内容
-            try {
-              Taro.removeStorageSync('userInfo');
-              Taro.removeStorageSync('token');
-            } catch (e) {
-              // Do something when catch error
-            }
-            // 切换到登录页面
-            Taro.navigateTo({
-              url: '/pages/auth/login/login'
-            });
-          } else if(res.data.errno == 0) {
-            resolve(res.data.data);
-          } else {
-            Taro.showToast({
-              title: res.data.errmsg,
-              icon: 'none',
-            })
-            reject(res.data.errmsg);
-          }
-        } else {
-          reject(res.errMsg);
-        }
-
+        resolve(res.data);
       },
       fail: function(err) {
         reject(err)

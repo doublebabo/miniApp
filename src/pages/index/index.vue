@@ -11,7 +11,7 @@ import Taro from "@tarojs/taro";
 const loginSvg = require('./../../assets/login.svg');
 
 function onEnter() {
-  Taro.redirectTo({
+  Taro.navigateTo({
     url: `/pages/apply_detail/index`,
   });
 }

@@ -5,41 +5,54 @@
                  :scroll-top="0">
       <nut-form class="form-container" :model-value="dynamicForm.state" ref="dynamicRefForm">
         <view class="form-title">到访信息</view>
-        <nut-form-item class="tap-cell-box" label="来访事由" prop="v_reason" required :rules="[{ required: true, message: '请输入来访事由' }]">
-          <nut-input
-              v-model="dynamicForm.state.v_reason"
-              type="input"
-              :placeholder="getPlaceholder('请输入来访事由')"
-              :readonly="!canEdit"
-          />
+        <nut-form-item label="来访事由" prop="v_reason" body-align="right" required
+                       :rules="[{ required: true, message: '请输入来访事由' }]">
+          <input class="nut-input-text" v-model="dynamicForm.state.v_reason" :readonly="!canEdit"
+                 :placeholder="getPlaceholder('请输入来访事由')" type="text"/>
         </nut-form-item>
-        <nut-form-item class="tap-cell-box" label="来访园区" prop="visitArea.text" required :rules="[{ required: true, message: '请选择来访园区' }]">
-          <view class="tap-cell" @click="() => canEdit && visitAreaPicker.onShow()">
-            {{ dynamicForm.state.visitArea.text || '请选择' }}
+        <nut-form-item class="tap-cell-box" label="访客类型" prop="secondVisitorType.text" body-align="right" required
+                       :rules="[{ required: true, message: '请输入访客类型' }]">
+          <view class="tap-cell" @click="() => canEdit && secondVisitorTypePicker.onShow()">
+            {{ dynamicForm.state.secondVisitorType.text || '请选择' }}
             <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
           </view>
-          <areas-pick
-              ref="areasPick"
-              :options="visitAreaPicker.options"
-              :confirm="visitAreaPicker.confirm"
-              :title="'请选择来访园区'"
+          <reason-pick
+              ref="secondVisitorTypePick"
+              :options="secondVisitorTypePicker.options"
+              :confirm="secondVisitorTypePicker.confirm"
+              :title="'请选择访客类型'"
           />
         </nut-form-item>
-        <nut-form-item class="tap-cell-box" label="来访时间" :prop="'visitDate.' + 0" required :rules="[{ required: true, message: '请选择来访时间' }]">
+        <!--        <nut-form-item class="tap-cell-box" label="来访园区" prop="visitArea.text" required :rules="[{ required: true, message: '请选择来访园区' }]">-->
+        <!--          <view class="tap-cell" @click="() => canEdit && visitAreaPicker.onShow()">-->
+        <!--            {{ dynamicForm.state.visitArea.text || '请选择' }}-->
+        <!--            <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>-->
+        <!--          </view>-->
+        <!--          <areas-pick-->
+        <!--              ref="areasPick"-->
+        <!--              :options="visitAreaPicker.options"-->
+        <!--              :confirm="visitAreaPicker.confirm"-->
+        <!--              :title="'请选择来访园区'"-->
+        <!--          />-->
+        <!--        </nut-form-item>-->
+        <nut-form-item class="tap-cell-box" label="来访时间" prop="v_timeStr" required
+                       :rules="[{ required: true, message: '请选择来访时间' }]">
           <view class="tap-cell" @click="() => canEdit && visitDatePick.onShow(0)">
-            {{ dynamicForm.state.visitDate?.[0] || '请选择来访时间' }}
+            {{ dynamicForm.state.v_timeStr || '请选择来访时间' }}
             <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
           </view>
         </nut-form-item>
-        <nut-form-item class="tap-cell-box" label="离访时间" :prop="'visitDate.' + 1" required :rules="[{ required: true, message: '请选择离访时间' }]">
+        <nut-form-item class="tap-cell-box" label="离访时间" prop="v_lvTimeStr" required
+                       :rules="[{ required: true, message: '请选择离访时间' }]">
           <view class="tap-cell" @click="() => canEdit && visitDatePick.onShow(1)">
-            {{ dynamicForm.state.visitDate?.[1] || '请选择离访时间' }}
+            {{ dynamicForm.state.v_lvTimeStr || '请选择离访时间' }}
             <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
           </view>
         </nut-form-item>
-        <nut-form-item class="tap-cell-box" label="被拜访人" prop="visitWho.text" required :rules="[{ required: true, message: '请选择被拜访人' }]">
+        <nut-form-item class="tap-cell-box" label="被拜访人" prop="isv_id.text" required
+                       :rules="[{ required: true, message: '请选择被拜访人' }]">
           <view class="tap-cell" @click="() => canEdit && visitWhoPicker.onShow()">
-            {{ dynamicForm.state.visitWho.text || '请选择' }}
+            {{ dynamicForm.state.isv_id.text || '请选择' }}
             <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
           </view>
           <search-pick
@@ -60,7 +73,7 @@
               :readonly="!canEdit"
           />
         </nut-form-item>
-        <template v-for="(i, index) in dynamicForm.state.visitors" :key="i.key">
+        <template v-for="(i, index) in dynamicForm.state.followVisitors" :key="i.key">
           <view class="form-title">{{ index === 0 ? '来访人信息' : ('随行人' + index) }}
             <view v-if="canEdit && index !== 0" class="form-title-box-rt"
                   @click="() => dynamicForm.methods.remove(index)">
@@ -68,29 +81,29 @@
               移除访客
             </view>
           </view>
-          <nut-form-item label="手机号" :prop="'visitors.' + index + '.phoneNumber'" required
+          <nut-form-item label="手机号" :prop="'followVisitors.' + index + '.v_phone'" required
                          :rules="[{ required: true, message: '请输入手机号' }]">
-            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.phoneNumber" placeholder="请输入手机号"
+            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.v_phone" placeholder="请输入手机号"
                        type="text"/>
           </nut-form-item>
-          <nut-form-item label="姓名" :prop="'visitors.' + index + '.name'" required
+          <nut-form-item label="姓名" :prop="'followVisitors.' + index + '.v_name'" required
                          :rules="[{ required: true, message: '请输入姓名' }]">
-            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.name" placeholder="请输入姓名" type="text"/>
+            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.v_name" placeholder="请输入姓名" type="text"/>
           </nut-form-item>
-          <nut-form-item v-if="index === 0" label="工作单位" :prop="'visitors.' + index + '.company'"
+          <nut-form-item v-if="index === 0" label="工作单位" :prop="'followVisitors.' + index + '.v_dw'"
                          :required="index === 0" :rules="[{ required: true, message: '请输入工作单位' }]">
-            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.company" placeholder="请输入工作单位"
+            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.v_dw" placeholder="请输入工作单位"
                        type="text"/>
           </nut-form-item>
-          <nut-form-item label="身份证号" :prop="'visitors.' + index + '.idCardNumber'" required
+          <nut-form-item label="身份证号" :prop="'followVisitors.' + index + '.v_certificateNumber'" required
                          :rules="[{ required: true, message: '请输入身份证号' }]">
-            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.idCardNumber" placeholder="请输入身份证号"
+            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.v_certificateNumber" placeholder="请输入身份证号"
                        type="text"/>
           </nut-form-item>
-          <nut-form-item class="tap-cell-box" label="车牌号" :prop="'visitors.' + index + '.plateNumber'">
+          <nut-form-item class="tap-cell-box" label="车牌号" :prop="'followVisitors.' + index + '.v_plateNumber'">
             <!--            <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.plateNumber" :placeholder="getPlaceholder('请输入车牌号')" type="text"/>-->
             <view class="tap-cell" @click="() => canEdit && plateNumberPick.onShow(index)">
-              {{ dynamicForm.state.visitors[index].plateNumber || '请选择' }}
+              {{ dynamicForm.state.followVisitors[index].v_plateNumber || '请选择' }}
               <nut-icon v-if="canEdit" class="tap-cell-icon" name="rect-right"></nut-icon>
             </view>
           </nut-form-item>
@@ -102,7 +115,7 @@
               </view>
             </template>
             <nut-uploader :disabled="!canEdit" url="http://服务地址" :auto-upload="false" accept="image/*"
-                          v-model:file-list="i.personPicFile" maximum="1" multiple>
+                          v-model:file-list="i.faceFile" maximum="1" multiple>
             </nut-uploader>
           </nut-form-item>
         </template>
@@ -114,7 +127,7 @@
             :visible="plateNumberPick.show"
             :confirm="plateNumberPick.confirm"
             :close="plateNumberPick.onShow"
-            :values="dynamicForm.state.visitors[plateNumberPick.index].plateNumber"
+            :values="dynamicForm.state.followVisitors[plateNumberPick.index].v_plateNumber"
         />
         <nut-datepicker
             class="data-select-picker"
@@ -127,6 +140,7 @@
             cancel-text=" "
             ok-text=" "
             v-model:visible="visitDatePick.show"
+            :formatter="visitDatePick.formatter"
         >
           <nut-button class="date-select-btn" block shape="square" @click="visitDatePick.confirm">确定</nut-button>
         </nut-datepicker>
@@ -139,23 +153,24 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeMount, reactive, ref} from "vue";
-import AreasPick from "./areas-pick.vue";
+import {computed,  onMounted, reactive, ref} from "vue";
 import ReasonPick from "./reason-pick.vue";
 import SearchPick from "./search-pick.vue";
 import Taro from "@tarojs/taro";
 import PlateNumberPick from "./plate-number-pick.vue";
+import request from "../../utils/request";
 
-const $instance = Taro.getCurrentInstance();
 const canEdit = ref(true);
-const reasonPick = ref()
-const areasPick = ref()
 const searchPick = ref()
+const secondVisitorTypePick = ref()
 
-onBeforeMount(() => {
-  if ($instance.router?.params.id) {
-    canEdit.value = false;
-  }
+
+onMounted(async () => {
+  const visitorTypes = await request.post('/evo-apigw/evo-visitor/1.0.0/visitor-type/page', {
+    "pageSize": 10000,
+    "pageNum": 1
+  });
+  secondVisitorTypePicker.options = visitorTypes?.data?.pageData?.map(o => ({text: o.typeName, value: o.id})) || [];
 });
 
 function getPlaceholder(text) {
@@ -165,31 +180,28 @@ function getPlaceholder(text) {
 const dynamicRefForm = ref<any>(null);
 const dynamicForm = {
   state: reactive({
-    name: '',
     v_reason: '',
-    visitArea: {
+    v_timeStr: '',
+    v_lvTimeStr: '',
+    secondVisitorType: {
       text: '',
       value: ''
     },
-    visitWho: {
-      text: '',
-      value: ''
-    },
-    needEating: false,
-    wifiAccess: false,
     memo: '',
-    visitDate: new Array(2),
-    visitors: [{
+    visitorType: 2,
+    userId: 0,
+    isv_id: {
+      text: '',
+      value: ''
+    },
+    followVisitors: [{
       key: 1,
-      phoneNumber: '',
-      name: '',
-      company: '',
-      idCardNumber: '',
-      plateNumber: '',
-      personPicFile: [],
-      healthPicFile: [],
-      travelPicFile: [],
-      nucleicAcidReportFile: [],
+      v_phone: '',
+      v_name: '',
+      v_dw: '',
+      v_certificateNumber: '',
+      v_plateNumber: '',
+      faceFile: [],
     }]
   }),
 
@@ -199,8 +211,8 @@ const dynamicForm = {
         url: `/pages/finish/index`,
       })
       dynamicRefForm.value.validate().then(({valid, errors}) => {
+        console.log('dynamicForm.state', dynamicForm.state);
         if (valid) {
-          console.log('success', dynamicForm);
         } else {
           console.log('error submit!!', errors);
           Taro.showToast({
@@ -215,90 +227,113 @@ const dynamicForm = {
       dynamicRefForm.value.reset();
     },
     remove(index) {
-      dynamicForm.state.visitors.splice(index, 1);
+      dynamicForm.state.followVisitors.splice(index, 1);
     },
     add() {
       // let newIndex = dynamicForm.state.tels.length;
-      dynamicForm.state.visitors.push({
+      dynamicForm.state.followVisitors.push({
         key: Date.now(),
-        phoneNumber: '',
-        name: '',
-        company: '',
-        idCardNumber: '',
-        plateNumber: '',
-        personPicFile: [],
-        healthPicFile: [],
-        travelPicFile: [],
-        nucleicAcidReportFile: [],
+        v_phone: '',
+        v_name: '',
+        v_dw: '',
+        v_certificateNumber: '',
+        v_plateNumber: '',
+        faceFile: [],
       });
     }
   }
 };
 
 
-const visitAreaPicker = reactive({
-  options: [
-    {name: '名字名字名字名字名字名字字', value: 1, address: '地址地地址地址地址地址地址地址地址地址'},
-    {name: '名字名字名字名字名字名字名字名字名字名字名字名字1', value: 2, address: '地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址1'},
-    {name: '名字名字名字名字名字名字名字名字名字名字名字名字2', value: 3, address: '地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址2'},
-    {name: '名字名字名字名字名字名字名字名字名字名字名字名字3', value: 4, address: '地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址3'},
-    {name: '名字名字名字名字名字名字名字名字名字名字名字名字4', value: 5, address: '地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址4'},
-    {name: '名字名字名字名字名字名字名字名字名字名字名字名字5', value: 6, address: '地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址5'},
-    {name: '名字名字名字名字名字名字名字名字名字名字名字名字6', value: 7, address: '地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址6'},
-  ],
-  onShow() {
-    areasPick.value.onShow();
-  },
-  confirm(selectedOptions) {
-    areasPick.value.onClose();
-    dynamicForm.state.visitArea.value = selectedOptions?.map(o => o.value)?.join(',');
-    dynamicForm.state.visitArea.text = selectedOptions?.map(o => o.name)?.join(',');
-  },
-});
-
 const currentDateValue = computed(() => {
-  const v = dynamicForm.state.visitDate[visitDatePick.currenDateIndex];
+  let v;
+  if (visitDatePick.currenDateIndex === 0) {
+    v = dynamicForm.state.v_timeStr;
+  } else {
+    v = dynamicForm.state.v_lvTimeStr;
+  }
   return v && new Date(v) || null;
 });
+
 
 const visitDatePick = reactive({
   show: ref(false),
   currenDateIndex: ref(0),
   minDate: new Date(),
-  maxDate: new Date('2099-12-31'),
-  title: ['请选择入园日期（年/月/日）', '请选择出园日期（年/月/日）'],
+  maxDate: new Date('2099-12-31 23:59:00'),
+  title: ['请选择来访时间', '请选择离访时间'],
   values: new Array(2),
+  formatter: (type: string, option) => {
+    switch (type) {
+      case 'year':
+        option.text += '年';
+        break;
+      case 'month':
+        option.text += '月';
+        break;
+      case 'day':
+        option.text += '日';
+        break;
+      case 'hour':
+        option.text += '时';
+        break;
+      case 'minute':
+        option.text += '分';
+        break;
+      default:
+        option.text += '';
+    }
+    return option;
+  },
   onShow(index) {
     visitDatePick.currenDateIndex = index;
     visitDatePick.show = !visitDatePick.show;
     if (index === 0) {
       visitDatePick.minDate = new Date();
-      visitDatePick.maxDate = dynamicForm.state.visitDate[1] && new Date(dynamicForm.state.visitDate[1]) || new Date('2099-12-31');
+      visitDatePick.maxDate = dynamicForm.state.v_lvTimeStr && new Date(dynamicForm.state.v_lvTimeStr) || new Date('2099-12-31 23:59:00');
     } else {
-      visitDatePick.maxDate = new Date('2099-12-31');
-      visitDatePick.minDate = dynamicForm.state.visitDate[0] && new Date(dynamicForm.state.visitDate[0]) || new Date();
+      visitDatePick.maxDate = new Date('2099-12-31 23:59:00');
+      visitDatePick.minDate = dynamicForm.state.v_timeStr && new Date(dynamicForm.state.v_timeStr) || new Date();
     }
   },
   change({columnIndex, selectedValue, selectedOptions}) {
-    console.log(selectedOptions.map((option) => option.text).join(''))
     visitDatePick.values[visitDatePick.currenDateIndex] = selectedOptions.map((option) => option.text).join('-');
   },
   confirm() {
     const index = visitDatePick.currenDateIndex;
     let v = visitDatePick.values[index];
-    if (!v) {
+    if (v) {
+      v = v.split('-').map(o => o.slice(0, -1));
+      v = `${v[0]}-${v[1]}-${v[2]} ${v[3]}:${v[4]}:00`;
+    } else {
       let date;
       if (index === 0) {
         date = new Date();
       } else {
-        date = dynamicForm.state.visitDate[0] && new Date(dynamicForm.state.visitDate[0]) || new Date();
+        date = dynamicForm.state.v_timeStr && new Date(dynamicForm.state.v_timeStr) || new Date();
       }
-      v = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+      v = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:00`;
     }
-    dynamicForm.state.visitDate[index] = v;
+    if (index === 0) {
+      dynamicForm.state.v_timeStr = v;
+    } else {
+      dynamicForm.state.v_lvTimeStr = v;
+    }
     visitDatePick.show = false;
   },
 });
+
+const secondVisitorTypePicker = reactive({
+  options: [],
+  onShow() {
+    secondVisitorTypePick.value.onShow();
+  },
+  confirm(selectedOptions) {
+    secondVisitorTypePick.value.onClose();
+    dynamicForm.state.secondVisitorType.value = selectedOptions.value;
+    dynamicForm.state.secondVisitorType.text = selectedOptions.text;
+  },
+})
 
 const visitWhoPicker = reactive({
   request(params) {
@@ -320,8 +355,8 @@ const visitWhoPicker = reactive({
   },
   confirm(selectedOptions) {
     searchPick.value.onClose();
-    dynamicForm.state.visitWho.value = selectedOptions.value;
-    dynamicForm.state.visitWho.text = selectedOptions.text;
+    dynamicForm.state.isv_id.value = selectedOptions.value;
+    dynamicForm.state.isv_id.text = selectedOptions.text;
   },
 })
 
@@ -334,7 +369,7 @@ const plateNumberPick = reactive({
   },
   confirm(val) {
     plateNumberPick.show = false;
-    dynamicForm.state.visitors[plateNumberPick.index].plateNumber = val;
+    dynamicForm.state.followVisitors[plateNumberPick.index].plateNumber = val;
   },
 })
 
@@ -377,6 +412,7 @@ const plateNumberPick = reactive({
     font-weight: bold;
     display: flex;
     justify-content: center;
+
     .minus-icon {
       position: relative;
       top: 1px;
@@ -395,12 +431,14 @@ const plateNumberPick = reactive({
     display: flex;
     align-items: center;
     padding: 0 16Px;
+
     .tap-cell {
       color: rgb(128, 128, 128);
       position: relative;
       padding: 13Px;
       padding-right: 20px;
       text-align: right;
+
       .tap-cell-icon {
         position: absolute;
         top: 50%;
@@ -409,7 +447,6 @@ const plateNumberPick = reactive({
       }
     }
   }
-
 
 
   .add-cell {
@@ -438,6 +475,9 @@ const plateNumberPick = reactive({
   }
 
   .nut-input-text {
+    text-align: right;
+    color: rgb(128, 128, 128);
+
     .input-text {
       text-align: right !important;
       width: 100%;
@@ -448,7 +488,7 @@ const plateNumberPick = reactive({
   .switch-pick-btn {
     padding: 0 5px;
   }
-  
+
   .switch-pick-btn.nut-switch.switch-close {
     background-color: #8799a3;
   }
