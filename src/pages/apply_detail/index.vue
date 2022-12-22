@@ -230,7 +230,6 @@ const dynamicForm = {
       dynamicForm.state.followVisitors.splice(index, 1);
     },
     add() {
-      // let newIndex = dynamicForm.state.tels.length;
       dynamicForm.state.followVisitors.push({
         key: Date.now(),
         v_phone: '',
