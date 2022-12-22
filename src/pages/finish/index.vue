@@ -14,7 +14,7 @@ import Taro from "@tarojs/taro";
 const svg = require('./../../assets/posted.svg');
 
 function onEnter() {
-  Taro.redirectTo({
+  Taro.navigateBack({
     url: `/pages/index/index`,
   });
 }

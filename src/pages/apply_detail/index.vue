@@ -368,7 +368,7 @@ const plateNumberPick = reactive({
   },
   confirm(val) {
     plateNumberPick.show = false;
-    dynamicForm.state.followVisitors[plateNumberPick.index].plateNumber = val;
+    dynamicForm.state.followVisitors[plateNumberPick.index].v_plateNumber = val;
   },
 })
 
