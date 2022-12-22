@@ -82,7 +82,7 @@
             </view>
           </view>
           <nut-form-item label="手机号" :prop="'followVisitors.' + index + '.v_phone'" required
-                         :rules="[{ required: true, message: '请输入手机号' }]">
+                         :rules="[{ required: true, message: '请输入手机号' }, { regex: /^((\+|00)86)?1\d{10}$/, message: '请输入正确的手机号' }]">
             <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.v_phone" placeholder="请输入手机号"
                        type="text"/>
           </nut-form-item>
@@ -96,7 +96,7 @@
                        type="text"/>
           </nut-form-item>
           <nut-form-item label="身份证号" :prop="'followVisitors.' + index + '.v_certificateNumber'" required
-                         :rules="[{ required: true, message: '请输入身份证号' }]">
+                         :rules="[{ required: true, message: '请输入身份证号' }, { regex: /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message: '请输入正确的身份证号' }]">
             <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.v_certificateNumber" placeholder="请输入身份证号"
                        type="text"/>
           </nut-form-item>
