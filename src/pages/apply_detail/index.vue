@@ -82,7 +82,7 @@
             </view>
           </view>
           <nut-form-item label="手机号" :prop="'followVisitors.' + index + '.v_phone'" required
-                         :rules="[{ required: true, message: '请输入手机号' }, { regex: /^((\+|00)86)?1\d{10}$/, message: '请输入正确的手机号' }]">
+                         :rules="[{ required: true, message: '请输入手机号' }]">
             <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.v_phone" placeholder="请输入手机号"
                        type="text"/>
           </nut-form-item>
@@ -96,7 +96,7 @@
                        type="text"/>
           </nut-form-item>
           <nut-form-item label="身份证号" :prop="'followVisitors.' + index + '.v_certificateNumber'" required
-                         :rules="[{ required: true, message: '请输入身份证号' }, { regex: /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message: '请输入正确的身份证号' }]">
+                         :rules="[{ required: true, message: '请输入身份证号' }]">
             <nut-input class="nut-input-text" :readonly="!canEdit" v-model="i.v_certificateNumber" placeholder="请输入身份证号"
                        type="text"/>
           </nut-form-item>
@@ -230,6 +230,7 @@ const dynamicForm = {
       dynamicForm.state.followVisitors.splice(index, 1);
     },
     add() {
+      // let newIndex = dynamicForm.state.tels.length;
       dynamicForm.state.followVisitors.push({
         key: Date.now(),
         v_phone: '',
@@ -247,19 +248,23 @@ const dynamicForm = {
 const currentDateValue = computed(() => {
   let v;
   if (visitDatePick.currenDateIndex === 0) {
-    v = dynamicForm.state.v_timeStr;
+    v = dynamicForm.state.v_timeStr || visitDatePick.minDate;
   } else {
-    v = dynamicForm.state.v_lvTimeStr;
+    v = dynamicForm.state.v_lvTimeStr || dynamicForm.state.v_timeStr || visitDatePick.minDate;
   }
-  return v && new Date(v) || null;
+  return new Date(v);
 });
 
+function formatDate(data) {
+  return data.replace(/-/g, '/');
+  // return data;
+}
 
 const visitDatePick = reactive({
-  show: ref(false),
-  currenDateIndex: ref(0),
+  show: false,
+  currenDateIndex: 0,
   minDate: new Date(),
-  maxDate: new Date('2099-12-31 23:59:00'),
+  maxDate: new Date('2099/12/31 23:59:00'),
   title: ['请选择来访时间', '请选择离访时间'],
   values: new Array(2),
   formatter: (type: string, option) => {
@@ -289,9 +294,9 @@ const visitDatePick = reactive({
     visitDatePick.show = !visitDatePick.show;
     if (index === 0) {
       visitDatePick.minDate = new Date();
-      visitDatePick.maxDate = dynamicForm.state.v_lvTimeStr && new Date(dynamicForm.state.v_lvTimeStr) || new Date('2099-12-31 23:59:00');
+      visitDatePick.maxDate = dynamicForm.state.v_lvTimeStr && new Date(dynamicForm.state.v_lvTimeStr) || new Date('2099/12/31 23:59:00');
     } else {
-      visitDatePick.maxDate = new Date('2099-12-31 23:59:00');
+      visitDatePick.maxDate = new Date('2099/12/31 23:59:00');
       visitDatePick.minDate = dynamicForm.state.v_timeStr && new Date(dynamicForm.state.v_timeStr) || new Date();
     }
   },
@@ -303,7 +308,7 @@ const visitDatePick = reactive({
     let v = visitDatePick.values[index];
     if (v) {
       v = v.split('-').map(o => o.slice(0, -1));
-      v = `${v[0]}-${v[1]}-${v[2]} ${v[3]}:${v[4]}:00`;
+      v = `${v[0]}/${v[1]}/${v[2]} ${v[3]}:${v[4]}:00`;
     } else {
       let date;
       if (index === 0) {
@@ -311,7 +316,7 @@ const visitDatePick = reactive({
       } else {
         date = dynamicForm.state.v_timeStr && new Date(dynamicForm.state.v_timeStr) || new Date();
       }
-      v = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:00`;
+      v = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:00`;
     }
     if (index === 0) {
       dynamicForm.state.v_timeStr = v;
@@ -360,15 +365,15 @@ const visitWhoPicker = reactive({
 })
 
 const plateNumberPick = reactive({
-  show: ref(false),
-  index: ref(0),
+  show: false,
+  index: 0,
   onShow(index) {
     if (!isNaN(index)) plateNumberPick.index = index;
     plateNumberPick.show = !plateNumberPick.show;
   },
   confirm(val) {
     plateNumberPick.show = false;
-    dynamicForm.state.followVisitors[plateNumberPick.index].v_plateNumber = val;
+    dynamicForm.state.followVisitors[plateNumberPick.index].plateNumber = val;
   },
 })
 
