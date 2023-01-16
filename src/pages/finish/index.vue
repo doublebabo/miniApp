@@ -17,6 +17,7 @@ function onEnter() {
   Taro.navigateBack({
     url: `/pages/index/index`,
   });
+
 }
 
 

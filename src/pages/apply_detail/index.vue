@@ -153,6 +153,7 @@
 </template>
 
 <script setup lang="ts">
+
 import {computed,  onMounted, reactive, ref} from "vue";
 import ReasonPick from "./reason-pick.vue";
 import SearchPick from "./search-pick.vue";
@@ -373,7 +374,7 @@ const plateNumberPick = reactive({
   },
   confirm(val) {
     plateNumberPick.show = false;
-    dynamicForm.state.followVisitors[plateNumberPick.index].plateNumber = val;
+    dynamicForm.state.followVisitors[plateNumberPick.index].v_plateNumber = val;
   },
 })
 

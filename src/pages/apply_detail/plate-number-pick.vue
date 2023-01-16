@@ -98,6 +98,9 @@ watch(props, () => {
       carTypeValue.value = '2';
       plateNumberArray.index = 7;
     }
+  } else {
+    plateNumberArray.index = 0;
+    plateNumberArray.values = new Array(7);
   }
 })
 
