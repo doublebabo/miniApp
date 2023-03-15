@@ -317,7 +317,12 @@ const visitDatePick = reactive({
       } else {
         date = dynamicForm.state.v_timeStr && new Date(dynamicForm.state.v_timeStr) || new Date();
       }
-      v = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:00`;
+
+      const month = date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+      const d = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
+      const hours = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours();
+      const mins = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
+      v = `${date.getFullYear()}/${month}/${d} ${hours}:${mins}:00`;
     }
     if (index === 0) {
       dynamicForm.state.v_timeStr = v;
